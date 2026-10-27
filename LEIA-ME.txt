@@ -1,0 +1,42 @@
+ROTAS DE CAMPO - como colocar no ar e usar
+===========================================
+
+O QUE É
+Aplicativo que abre no navegador (Chrome/Android, Safari/iPhone, Chrome/Edge no computador),
+lê a planilha de estabelecimentos, mostra as propriedades pendentes em vermelho e as
+visitadas em azul, sugere a rota do dia e funciona sem internet depois de instalado.
+
+PASSO 1 - COLOCAR OS ARQUIVOS NA INTERNET (uma única vez, por quem administra)
+O navegador só libera modo offline e GPS para endereços https. Os arquivos deste
+pacote NÃO contêm nenhum dado de produtor; os dados entram depois, pela planilha,
+direto no aparelho. Opções:
+  a) Netlify Drop: acesse app.netlify.com/drop e arraste a PASTA "rotas-campo" inteira.
+     Ele devolve um endereço https. (Gratuito.)
+  b) GitHub Pages ou o servidor da própria instituição (peça ao setor de TI para
+     publicar a pasta em um endereço https).
+Importante: publique TODOS os arquivos da pasta (index.html, sw.js, manifest.webmanifest, icon-*.png).
+
+PASSO 2 - INSTALAR EM CADA TABLET (com internet, uma única vez)
+  1. Abra o endereço no Chrome.
+  2. Menu (três pontinhos) > "Instalar aplicativo" / "Adicionar à tela inicial".
+  3. Abra o app, toque em "Importar planilha" e escolha o .xlsx.
+  4. Na aba "Dados", aproxime o mapa da sua região de trabalho e toque em
+     "Baixar mapa da área visível" para ter o mapa de fundo sem sinal.
+  5. Teste: coloque o tablet em modo avião e abra o app.
+
+USO NO DIA A DIA
+  - Aba "Rota do dia": toque em "Sugerir região com mais pendentes" ou toque no mapa para
+    escolher o destino. O app seleciona as pendentes no raio e no corredor do caminho e
+    ordena a visita. Ajuste raio, corredor e máximo de visitas.
+  - Em cada parada: botão "Visitada" (fica azul e registra data, hora e GPS).
+  - "Exportar GPX" abre a rota no Organic Maps/OsmAnd para navegar por estrada offline.
+  - Ao fim: aba "Dados" > "Exportar visitas feitas no app" gera a planilha para você lançar no sistema.
+  - Quando baixar uma planilha nova do sistema, importe de novo: as marcações do app são mantidas.
+
+LIMITES
+  - A distância/tempo mostrados são estimativas em linha reta x 1,3. A rota real por
+    estrada é a do app de navegação (GPX).
+  - O app não envia nada para lugar nenhum. Os dados ficam só no aparelho; faça a exportação
+    das visitas ao fim do dia para não depender do aparelho.
+  - CPF/CNPJ da planilha são ignorados.
+  - Mapas de fundo vêm do OpenStreetMap/Esri e são guardados aos poucos; baixe só a área que vai usar.
