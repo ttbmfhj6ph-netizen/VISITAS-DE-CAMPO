@@ -768,6 +768,20 @@ ol#stops,ul#plist{list-style:none;margin:0;padding:0}
 .pp button.go{background:#1e6bd6;color:#fff;border-color:#1e6bd6}
 .pp button.undo{background:#fff}
 .leaflet-container{font:inherit}
+#btnLocate{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+#btnLocate small{font-size:10px;font-weight:600;opacity:.85}
+#btnLocate.on{background:#00897b;color:#fff}
+.meicon{background:transparent;border:0}
+.me{width:44px;height:44px;position:relative}
+.me .dot{position:absolute;left:11px;top:11px;width:22px;height:22px;border-radius:50%;background:#00897b;border:3px solid #fff;box-shadow:0 0 0 2px rgba(0,137,123,.45),0 1px 6px rgba(0,0,0,.6)}
+.me .arr{position:absolute;left:14px;top:0;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid #00897b;filter:drop-shadow(0 0 2px #fff)}
+.stop-item{flex-wrap:wrap}
+.stop-item .who{flex:1 1 55%}
+.mv{display:flex;gap:4px;flex:none}
+.mv button{border:1px solid var(--line);background:var(--accent);border-radius:8px;width:36px;height:38px;font-weight:700;padding:0}
+#legend .legtitle{font-size:12px;font-weight:700;color:var(--fg);background:var(--panel);border-radius:8px;padding:3px 9px;box-shadow:var(--shadow);width:fit-content}
+#legend button.on{outline:3px solid var(--brand)}
+#legend i.cb{display:inline-grid;place-items:center;width:16px;height:16px;border:2px solid #14532d;border-radius:4px;background:#fff;color:#14532d;font-size:12px;line-height:1;font-style:normal;box-shadow:none}
 #modal{position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.55);display:none;place-items:center;padding:12px}
 .mbox{background:var(--panel);color:var(--fg);border-radius:16px;padding:18px;width:min(540px,94vw);max-height:88dvh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .mbox h2{margin:0 0 6px;font-size:18px}
@@ -807,7 +821,7 @@ table.cnt td:last-child{text-align:right;font-weight:700}
 
   <aside id="panel">
     <nav id="tabs" role="tablist">
-      <button data-tab="rota" class="on" role="tab">Rota do dia</button>
+      <button data-tab="rota" class="on" role="tab">Minha lista</button>
       <button data-tab="lista" role="tab">Propriedades</button>
       <button data-tab="dados" role="tab">Dados</button>
     </nav>
@@ -815,45 +829,18 @@ table.cnt td:last-child{text-align:right;font-weight:700}
     <!-- ===== ROTA ===== -->
     <section class="tab on" id="tab-rota">
       <div class="card">
-        <h3>Propriedades da região do dia</h3>
+        <h3>Minha lista do dia</h3>
         <div id="routeSummary" class="sum"></div>
         <ol id="stops"></ol>
         <div class="btns" id="routeBtns">
-          <button class="btn primary" id="btnRecalc">Recalcular (só pendentes)</button>
           <button class="btn" id="btnGpx">Exportar GPX</button>
           <button class="btn" id="btnKml">Exportar KML</button>
-          <button class="btn" id="btnRouteXlsx">Planilha do dia</button>
+          <button class="btn" id="btnRouteXlsx">Planilha da lista</button>
           <button class="btn" id="btnShare" style="display:none">Compartilhar GPX</button>
+          <button class="btn danger" id="btnClearList">Limpar lista</button>
         </div>
-        <p class="small muted">As propriedades escolhidas ficam com um aro escuro no mapa. A ordem e o caminho são você quem define. GPX/KML levam só os pontos e abrem no Organic Maps, OsmAnd, Google Earth e similares, que fazem a navegação por estrada offline.</p>
+        <p class="small muted">Você escolhe as propriedades (botão “＋ Minha lista” no balão de cada ponto) e define a ordem com ▲ ▼. O app não sugere nada. O GPX/KML leva os pontos na ordem que você definiu, para abrir no Organic Maps, OsmAnd ou Google Earth, que fazem a rota por estrada.</p>
       </div>
-      <div class="card">
-        <h3>Ponto de partida</h3>
-        <div class="row"><span id="baseTxt"></span></div>
-        <div class="btns">
-          <button class="btn" id="btnBaseGps">Usar meu GPS</button>
-          <button class="btn" id="btnBasePick">Tocar no mapa</button>
-          <button class="btn" id="btnBaseDef">Centro das propriedades</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Região de destino do dia</h3>
-        <div class="row"><span id="tgtTxt"></span></div>
-        <div class="btns">
-          <button class="btn primary" id="btnTgtSuggest">Sugerir região com mais pendentes</button>
-          <button class="btn" id="btnTgtPick">Tocar no mapa</button>
-          <button class="btn" id="btnTgtClear">Sem destino</button>
-        </div>
-        <label class="sl"><span>Raio ao redor do destino <output id="oRadius"></output></span>
-          <input type="range" id="sRadius" min="0" max="40" step="1"></label>
-        <label class="sl"><span>Largura do corredor no caminho <output id="oCorr"></output></span>
-          <input type="range" id="sCorr" min="0" max="15" step="1"></label>
-        <label class="sl"><span>Máximo de visitas no dia <output id="oMax"></output></span>
-          <input type="range" id="sMax" min="1" max="40" step="1"></label>
-        <label class="sl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="cRound" style="width:22px;height:22px"> Voltar ao ponto de partida</label>
-      </div>
-
     </section>
 
     <!-- ===== LISTA ===== -->
@@ -868,8 +855,7 @@ table.cnt td:last-child{text-align:right;font-weight:700}
           <option value="nocoord">Sem coordenada</option>
         </select>
         <select id="fSort" style="flex:1">
-          <option value="dist">Mais perto da base</option>
-          <option value="nome">Nome A–Z</option>
+          <option value="nome" selected>Nome A–Z</option>
           <option value="cad">Cadastro mais antigo</option>
         </select>
       </div>
@@ -925,9 +911,9 @@ table.cnt td:last-child{text-align:right;font-weight:700}
     <div id="mapbtns">
       <button id="btnLayer" title="Alternar mapa/satélite">Satélite</button>
       <button id="btnFit" title="Ver todas as pendentes">Tudo</button>
-      <button id="btnLocate" title="Minha posição">GPS</button>
+      <button id="btnCenter" title="Centralizar em mim" style="display:none">Centrar</button>
+      <button id="btnLocate" title="Mostrar minha posição ao vivo">GPS</button>
     </div>
-    <div id="banner"></div>
     <div id="empty"><div class="box">
       <h2>Carregue a primeira planilha</h2>
       <p class="muted">Cada atividade (Abertura de cadastro, Brucelose…) tem a sua planilha. Os dados ficam só neste aparelho.</p>
@@ -980,48 +966,28 @@ function distKm(a, b) {
   const h = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon/2)**2;
   return 2 * R_EARTH * Math.asin(Math.sqrt(h));
 }
-function distSegKm(p, a, b) {           // distância do ponto p ao segmento a-b (projeção local plana)
-  const k = 111.2, cx = Math.cos(rad(p.lat));
-  const ax = (a.lon - p.lon) * k * cx, ay = (a.lat - p.lat) * k;
-  const bx = (b.lon - p.lon) * k * cx, by = (b.lat - p.lat) * k;
-  const dx = bx - ax, dy = by - ay, L2 = dx*dx + dy*dy;
-  let t = L2 ? (-(ax*dx + ay*dy)) / L2 : 0; t = Math.max(0, Math.min(1, t));
-  return Math.hypot(ax + t*dx, ay + t*dy);
-}
-function corridorPoly(a, b, wKm) {
-  const k = 111.2, cx = Math.cos(rad(a.lat));
-  const dx = (b.lon - a.lon) * k * cx, dy = (b.lat - a.lat) * k, L = Math.hypot(dx, dy);
-  if (L < 0.2) return null;
-  const px = -dy / L * wKm, py = dx / L * wKm;
-  const pt = (o, sx, sy) => [o.lat + sy / k, o.lon + sx / (k * cx)];
-  return [pt(a, px, py), pt(b, px, py), pt(b, -px, -py), pt(a, -px, -py)];
-}
-
 /* ============ estado e persistência ============ */
 const LS_DATA = 'rc_data_v1', LS_STATE = 'rc_state_v1';
 const DEFAULT_BASE = {lat: -13.0, lon: -56.1};   // só enquanto não há planilha (centro de MT)
-const AUTO_LABEL = 'Centro das propriedades';
 const DEFAULT_ACT = 'Abertura de cadastro';
 let acts = [], records = [], byId = new Map();
-let state = {
-  base: {...DEFAULT_BASE}, baseLabel: AUTO_LABEL, baseAuto: true, target: null, marks: {}, route: null, actFilter: 'all',
-  s: {radius: 8, corridor: 3, max: 15, round: true, speed: 40, minVisit: 30, road: 1.3},
-  layer: 'osm', f: {pend: true, app: true, oficial: false}, tab: 'rota'
-};
+let state = {marks: {}, list: [], actSel: [], layer: 'osm', f: {pend: true, app: true, oficial: false}, tab: 'rota'};
 let memOnly = false;
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { memOnly = true; return false; } }
 function saveState() { lsSet(LS_STATE, state); }
 function saveData() { lsSet(LS_DATA, {acts}); }
 function loadAll() {
-  const st = lsGet(LS_STATE); if (st) { state = {...state, ...st, s: {...state.s, ...(st.s||{})}, f: {...state.f, ...(st.f||{})}}; }
+  const st = lsGet(LS_STATE); if (st) { state = {...state, ...st, f: {...state.f, ...(st.f||{})}}; ['base', 'baseLabel', 'baseAuto', 'target', 'route', 's'].forEach(k => delete state[k]); }
   const d = lsGet(LS_DATA);
   if (d && d.acts) acts = d.acts;
   else if (d && d.records) { const si = d.srcInfo || {}; acts = [{name: DEFAULT_ACT, file: si.file, at: si.at, mode: si.mode, records: d.records}]; }   // versão anterior
   if (!acts.length) acts = [{name: DEFAULT_ACT, records: []}];
-  if (state.baseAuto === undefined || state.baseLabel === 'Juína (centro)') { state.baseAuto = true; state.baseLabel = AUTO_LABEL; }
+  if (!Array.isArray(state.actSel)) state.actSel = (state.actFilter && state.actFilter !== 'all') ? [state.actFilter] : [];
+  delete state.actFilter;
+  if (!Array.isArray(state.list)) state.list = [];
   for (const id in state.marks) if (!state.marks[id].acts) state.marks[id].acts = [DEFAULT_ACT];
-  if (state.actFilter !== 'all' && !acts.some(a => a.name === state.actFilter)) state.actFilter = 'all';
+  state.actSel = state.actSel.filter(n => acts.some(a => a.name === n));
   rebuild();
 }
 function rebuild() {            // junta as atividades: uma propriedade = um ponto
@@ -1033,12 +999,11 @@ function rebuild() {            // junta as atividades: uma propriedade = um pon
     p.items.push({act: a.name, oficial: x.oficial, visita: x.visita, dvis: x.dvis, info: x.info || ''});
   }
   records = [...m.values()]; byId = m;
-  autoBase();
+  state.list = state.list.filter(id => byId.has(id));
 }
 const median = a => { const b = a.slice().sort((x, y) => x - y); return b.length ? b[Math.floor(b.length / 2)] : 0; };
 function centroidOf(list) { const pts = list.filter(r => r.lat != null); return pts.length ? {lat: median(pts.map(r => r.lat)), lon: median(pts.map(r => r.lon))} : null; }
-function autoBase() { if (!state.baseAuto) return; const c = centroidOf(records); if (c) { state.base = c; state.baseLabel = AUTO_LABEL; } }
-const itemsOf = r => state.actFilter && state.actFilter !== 'all' ? r.items.filter(i => i.act === state.actFilter) : r.items;
+const itemsOf = r => state.actSel && state.actSel.length ? r.items.filter(i => state.actSel.includes(i.act)) : r.items;
 const doneIn = (id, act) => { const m = state.marks[id]; return !!(m && m.acts && m.acts.includes(act)); };
 const pendOf = (r, all) => (all ? r.items : itemsOf(r)).filter(i => !i.oficial && !doneIn(r.id, i.act));
 function statusOf(r) {
@@ -1143,14 +1108,13 @@ const grpMarkers = L.layerGroup().addTo(map);
 const grpRoute = L.layerGroup().addTo(map);
 const grpMe = L.layerGroup().addTo(map);
 let markers = new Map();
-let pick = null;
 
 function buildMarkers() {
   grpMarkers.clearLayers(); markers = new Map();
   for (const r of records) {
     if (r.lat == null) continue;
     const m = L.circleMarker([r.lat, r.lon], {radius: radFor(statusOf(r), map.getZoom()), weight: 2.5, color: '#fff', fillOpacity: 1, fillColor: COLOR[statusOf(r)]});
-    m.on('click', () => { if (!pick) openPopup(r); });
+    m.on('click', () => openPopup(r));
     if (!L.Browser.mobile) m.bindTooltip(`<b>${esc(r.nome)}</b><br>${esc(r.dono) || 'Proprietário não informado'}`, {direction: 'top', offset: [0, -8]});
     markers.set(r.id, m);
   }
@@ -1162,7 +1126,7 @@ function styleMarker(r) {
   const s = statusOf(r);
   m.setStyle({fillColor: COLOR[s], radius: radFor(s, map.getZoom())});
 }
-map.on('zoomend', () => { records.forEach(styleMarker); renderRouteOverlay(); });
+map.on('zoomend', () => { records.forEach(styleMarker); renderListOverlay(); });
 function applyFilters() {
   for (const r of records) {
     const m = markers.get(r.id); if (!m) continue;
@@ -1179,8 +1143,15 @@ function counts() {
 function renderLegend() {
   const c = counts();
   const withData = acts.filter(a => a.records.length);
-  const sel = withData.length > 1 ? `<select id="actSel" aria-label="Atividade"><option value="all">Todas as atividades</option>${withData.map(a => `<option value="${esc(a.name)}" ${state.actFilter === a.name ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select>` : '';
-  $('#legend').innerHTML = sel + ['pend', 'app', 'oficial'].map(k =>
+  let chips = '';
+  if (withData.length > 1) {
+    chips = `<div class="legtitle">Atividade (nada marcado = todas)</div>` + withData.map(a => {
+      const on = state.actSel.includes(a.name);
+      const n = records.filter(r => r.items.some(i => i.act === a.name && !i.oficial && !doneIn(r.id, a.name))).length;
+      return `<button data-actchip="${esc(a.name)}" class="${on ? 'on' : ''}"><i class="cb">${on ? '✓' : ''}</i>${esc(a.name)} · ${n}</button>`;
+    }).join('');
+  }
+  $('#legend').innerHTML = chips + ['pend', 'app', 'oficial'].map(k =>
     `<button data-leg="${k}" class="${state.f[k] ? '' : 'dim'}"><i style="background:${COLOR[k]}"></i>${LABEL[k]} · ${c[k]}</button>`).join('');
 }
 function refreshAllStyles() { records.forEach(styleMarker); }
@@ -1203,7 +1174,7 @@ function popupHTML(r) {
   if (pend.length) acts += `<input class="obs" placeholder="Observação (opcional)"><div class="bb"><button class="go" data-act="mark" data-id="${esc(r.id)}">✔ Marcar como visitada</button></div>`;
   if (mk && mk.acts && mk.acts.length) acts += `<div class="bb"><button class="undo" data-act="unmark" data-id="${esc(r.id)}">Desfazer marcação</button></div>`;
   acts += infos;
-  acts += `<div class="bb"><button data-act="nav" data-id="${esc(r.id)}">Abrir no app de mapas</button>${r.lat != null ? `<button data-act="target" data-id="${esc(r.id)}">Definir como destino</button>` : ''}</div>`;
+  acts += `<div class="bb"><button data-act="nav" data-id="${esc(r.id)}">Abrir no app de mapas</button>${r.lat != null ? `<button data-act="addlist" data-id="${esc(r.id)}">${state.list.includes(r.id) ? '✕ Tirar da minha lista' : '＋ Minha lista'}</button>` : ''}</div>`;
   return `<div class="pp"><b>${esc(r.nome)}</b><span class="tag" style="background:${COLOR[s]}">${LABEL[s]}</span>
     <div class="meta">${esc(r.dono) || 'Proprietário não informado'}</div>
     <div class="meta">Cód. ${esc(r.id)}${r.sit ? ' · ' + esc(r.sit) : ''}${r.cad ? ' · cadastro ' + fmtD(r.cad) : ''}</div>
@@ -1240,7 +1211,7 @@ function unmarkVisited(id) {
   afterStatusChange(r);
 }
 function afterStatusChange(r) {
-  styleMarker(r); applyFilters(); saveState(); renderLegend(); renderRouteStops(); renderRouteOverlay(); renderList(); renderDados(); refreshPopup();
+  styleMarker(r); applyFilters(); saveState(); renderLegend(); renderMyList(); renderListOverlay(); renderList(); renderDados(); refreshPopup();
 }
 
 /* ---- navegação externa ---- */
@@ -1250,114 +1221,34 @@ function openNav(r) {
   location.href = url;
 }
 
-/* ============ roteirização ============ */
-function pathLen(pts) { let t = 0; for (let i = 1; i < pts.length; i++) t += distKm(pts[i-1], pts[i]); return t; }
-function orderStops(base, stops, round) {
-  if (stops.length < 2) return stops.slice();
-  // vizinho mais próximo
-  const left = stops.slice(), ord = []; let cur = base;
-  while (left.length) { let bi = 0, bd = Infinity; left.forEach((p, i) => { const d = distKm(cur, p); if (d < bd) { bd = d; bi = i; } }); cur = left.splice(bi, 1)[0]; ord.push(cur); }
-  // 2-opt (base fixa no início; e no fim se for ida e volta)
-  let path = [base, ...ord].concat(round ? [base] : []);
-  const n = path.length, end = round ? n - 1 : n; // índices móveis: 1..end-1
-  let improved = true, guard = 0;
-  while (improved && guard++ < 60) {
-    improved = false;
-    for (let i = 1; i < end - 1; i++) for (let j = i + 1; j < end; j++) {
-      const a = path[i-1], b = path[i], c = path[j], d = j + 1 < n ? path[j+1] : null;
-      const delta = distKm(a, c) + (d ? distKm(b, d) : 0) - distKm(a, b) - (d ? distKm(c, d) : 0);
-      if (delta < -1e-9) { path = path.slice(0, i).concat(path.slice(i, j + 1).reverse(), path.slice(j + 1)); improved = true; }
-    }
-  }
-  return path.slice(1, end);
+/* ============ minha lista do dia (escolhida por você) ============ */
+function myList() { return state.list.map(id => byId.get(id)).filter(r => r && r.lat != null); }
+function toggleList(id) {
+  const i = state.list.indexOf(id);
+  if (i >= 0) state.list.splice(i, 1); else state.list.push(id);
+  saveState(); renderMyList(); renderListOverlay(); refreshPopup();
 }
-function planRoute() {
-  const s = state.s, base = state.base, tgt = state.target || state.base;
-  const cand = [];
-  for (const r of records) {
-    if (r.lat == null || statusOf(r) !== 'pend') continue;
-    const dSeg = distSegKm(r, base, tgt);
-    const inCircle = distKm(r, tgt) <= s.radius, inCorr = s.corridor > 0 && dSeg <= s.corridor;
-    if (inCircle || inCorr) cand.push({r, key: dSeg});
-  }
-  cand.sort((a, b) => a.key - b.key);
-  const picked = cand.slice(0, s.max);
-  const ord = orderStops(base, picked.map(c => c.r), s.round);
-  state.route = {ids: ord.map(r => r.id), total: cand.length, at: Date.now()};
-  saveState();
+function moveList(id, d) {
+  const i = state.list.indexOf(id), j = i + d;
+  if (i < 0 || j < 0 || j >= state.list.length) return;
+  [state.list[i], state.list[j]] = [state.list[j], state.list[i]]; saveState(); renderMyList();
 }
-function routeMetrics() {
-  const rt = state.route; if (!rt || !rt.ids.length) return null;
-  const s = state.s, stops = rt.ids.map(id => byId.get(id)).filter(Boolean);
-  const pts = [state.base, ...stops].concat(s.round ? [state.base] : []);
-  const leg = []; for (let i = 1; i < pts.length; i++) leg.push(distKm(pts[i-1], pts[i]) * s.road);
-  const km = leg.reduce((a, b) => a + b, 0);
-  return {stops, leg, km, driveH: km / s.speed, visitH: stops.length * s.minVisit / 60};
-}
-function suggestTarget() {
-  const R = Math.max(state.s.radius, 4), pend = records.filter(r => r.lat != null && statusOf(r) === 'pend');
-  if (!pend.length) { toast('Não há propriedades pendentes com coordenada.'); return; }
-  let best = null;
-  for (const p of pend) {
-    const near = pend.filter(q => distKm(p, q) <= R);
-    const score = Math.min(near.length, state.s.max), dBase = distKm(p, state.base);
-    if (!best || score > best.score || (score === best.score && dBase < best.dBase)) best = {p, near, score, dBase};
-  }
-  const lat = best.near.reduce((a, q) => a + q.lat, 0) / best.near.length, lon = best.near.reduce((a, q) => a + q.lon, 0) / best.near.length;
-  state.target = {lat, lon};
-  planRoute(); renderAll(); fitRoute();
-  toast(`Região sugerida: ${best.near.length} pendentes em ${R} km`);
-}
-function fitRoute() {
-  const m = routeMetrics(); const pts = [[state.base.lat, state.base.lon]];
-  if (m) m.stops.forEach(r => pts.push([r.lat, r.lon])); if (state.target) pts.push([state.target.lat, state.target.lon]);
-  if (pts.length > 1) map.fitBounds(L.latLngBounds(pts).pad(0.15));
-}
-
-/* ---- desenho da rota ---- */
-function flagIcon(cls, txt) { return L.divIcon({className: 'stopwrap', html: `<div class="flag ${cls}"><span>${txt}</span></div>`, iconSize: [34, 34], iconAnchor: [17, cls === 'tgt' ? 34 : 17]}); }
-function renderRouteOverlay() {
+function renderListOverlay() {
   grpRoute.clearLayers();
-  const base = state.base, tgt = state.target;
-  if (!records.length) return;
-  if (tgt) {
-    if (state.s.radius > 0) L.circle([tgt.lat, tgt.lon], {radius: state.s.radius * 1000, color: '#7b3fc4', weight: 2, dashArray: '6 6', fillColor: '#7b3fc4', fillOpacity: .07, interactive: false}).addTo(grpRoute);
-    if (state.s.corridor > 0) { const poly = corridorPoly(base, tgt, state.s.corridor); if (poly) L.polygon(poly, {color: '#7b3fc4', weight: 1, dashArray: '4 6', fillColor: '#7b3fc4', fillOpacity: .06, interactive: false}).addTo(grpRoute); }
-    L.marker([tgt.lat, tgt.lon], {icon: flagIcon('tgt', 'D'), interactive: false}).addTo(grpRoute);
-  }
-  const m = routeMetrics();
-  if (m) m.stops.forEach(r => {
-    L.circleMarker([r.lat, r.lon], {radius: radFor(statusOf(r), map.getZoom()) + 6, color: '#111', weight: 3, fill: false, interactive: false}).addTo(grpRoute);
-  });
-  L.marker([base.lat, base.lon], {icon: flagIcon('base', 'B'), interactive: false}).addTo(grpRoute);
+  myList().forEach(r => L.circleMarker([r.lat, r.lon], {radius: radFor(statusOf(r), map.getZoom()) + 6, color: '#111', weight: 3, fill: false, interactive: false}).addTo(grpRoute));
 }
-
-/* ============ painel: rota ============ */
-function renderRouteControls() {
-  const s = state.s;
-  $('#baseTxt').innerHTML = `<b>${esc(state.baseLabel || 'Ponto escolhido')}</b> <span class="muted small">${state.base.lat.toFixed(4)}, ${state.base.lon.toFixed(4)}</span>`;
-  $('#tgtTxt').innerHTML = state.target ? `<b>Região marcada no mapa (D)</b> <span class="muted small">${state.target.lat.toFixed(4)}, ${state.target.lon.toFixed(4)}</span>` : `<span class="muted">Sem destino: busca ao redor da base</span>`;
-  $('#sRadius').value = s.radius; $('#oRadius').textContent = s.radius + ' km';
-  $('#sCorr').value = s.corridor; $('#oCorr').textContent = s.corridor ? s.corridor + ' km' : 'desligado';
-  $('#sMax').value = s.max; $('#oMax').textContent = s.max;
-  $('#cRound').checked = s.round;
-}
-function renderRouteStops() {
-  const m = routeMetrics(), box = $('#routeSummary'), ol = $('#stops');
-  const has = !!m;
-  $('#btnGpx').disabled = $('#btnKml').disabled = $('#btnRouteXlsx').disabled = !has;
-  if (!records.length) { box.innerHTML = '<span class="muted">Importe a planilha para começar.</span>'; ol.innerHTML = ''; return; }
-  if (!has) { box.innerHTML = '<span class="muted">Nenhuma pendente nessa área. Aumente o raio/corredor ou use “Sugerir região”.</span>'; ol.innerHTML = ''; return; }
-  const done = m.stops.filter(r => statusOf(r) !== 'pend').length, tot = state.route.total;
-  let html = `<b>${m.stops.length} propriedades</b> na região · ${done} feitas`;
-  if (tot > m.stops.length) html += `<div class="warn">Há mais ${tot - m.stops.length} pendentes nessa área além do limite do dia. Aumente o “máximo de visitas” se couber.</div>`;
-  if (done === m.stops.length) html += `<div class="warn">Todas feitas. Toque em “Recalcular” para montar outra região.</div>`;
-  box.innerHTML = html;
-  ol.innerHTML = m.stops.map(r => {
-    const s = statusOf(r), isDone = s !== 'pend', pn = pendOf(r, true).map(i => i.act).join(', ');
-    return `<li class="stop-item ${isDone ? 'done' : ''}" data-focus="${esc(r.id)}"><span class="dot" style="background:${COLOR[s]}"></span>
+function renderMyList() {
+  const list = myList(), box = $('#routeSummary'), ol = $('#stops');
+  ['btnGpx', 'btnKml', 'btnRouteXlsx', 'btnShare', 'btnClearList'].forEach(id => { const b = $('#' + id); if (b) b.disabled = !list.length; });
+  if (!list.length) { box.innerHTML = '<span class="muted">Sua lista está vazia. Toque numa propriedade no mapa e use “＋ Minha lista”.</span>'; ol.innerHTML = ''; return; }
+  const done = list.filter(r => statusOf(r) !== 'pend').length;
+  box.innerHTML = `<b>${list.length} propriedade(s)</b> na lista · ${done} feitas`;
+  ol.innerHTML = list.map(r => {
+    const s = statusOf(r), isDone = s !== 'pend', pn = pendOf(r, true).map(i => i.act).join(', '), id = esc(r.id);
+    return `<li class="stop-item ${isDone ? 'done' : ''}" data-focus="${id}"><span class="dot" style="background:${COLOR[s]}"></span>
       <div class="who"><b>${esc(r.nome)}</b><small>${esc(r.dono) || '—'}${pn ? ' · ' + esc(pn) : ''}</small></div>
-      <button class="chk" data-act="${isDone ? 'unmark' : 'mark'}" data-id="${esc(r.id)}">${isDone ? 'Desfazer' : 'Visitada'}</button></li>`;
+      <div class="mv"><button data-act="up" data-id="${id}" aria-label="Subir">▲</button><button data-act="down" data-id="${id}" aria-label="Descer">▼</button><button data-act="unlist" data-id="${id}" aria-label="Tirar da lista">✕</button></div>
+      <button class="chk" data-act="${isDone ? 'unmark' : 'mark'}" data-id="${id}">${isDone ? 'Desfazer' : 'Visitada'}</button></li>`;
   }).join('');
 }
 
@@ -1371,8 +1262,7 @@ function renderList() {
     if (q && !norm(r.nome + ' ' + r.dono + ' ' + r.id).includes(q)) return false;
     return true;
   });
-  const dk = r => r.lat != null ? distKm(state.base, r) : 1e9;
-  if (so === 'dist') L_.sort((a, b) => dk(a) - dk(b)); else if (so === 'nome') L_.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')); else L_.sort((a, b) => String(a.cad).localeCompare(String(b.cad)));
+  if (so === 'nome') L_.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')); else L_.sort((a, b) => String(a.cad).localeCompare(String(b.cad)));
   $('#listCount').textContent = `${L_.length} propriedade(s)` + (L_.length > 250 ? ' · mostrando 250' : '');
   $('#plist').innerHTML = L_.slice(0, 250).map(r => {
     const s = statusOf(r), pn = pendOf(r).map(i => i.act).join(', ');
@@ -1383,7 +1273,7 @@ function renderList() {
 /* ============ painel: dados ============ */
 function renderDados() {
   const c = counts();
-  $('#cntTable').innerHTML = `<tr><td>Propriedades${state.actFilter !== 'all' ? ' (' + esc(state.actFilter) + ')' : ''}</td><td>${c.total}</td></tr>
+  $('#cntTable').innerHTML = `<tr><td>Propriedades${state.actSel.length ? ' (' + esc(state.actSel.join(', ')) + ')' : ''}</td><td>${c.total}</td></tr>
     <tr><td>Pendentes (vermelho)</td><td>${c.pend}</td></tr>
     <tr><td>Visitadas no app (azul)</td><td>${c.app}</td></tr>
     <tr><td>Já visitadas na planilha (cinza)</td><td>${c.oficial}</td></tr>
@@ -1415,18 +1305,18 @@ function download(name, data, type) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
 const xml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
-function routeStopsList() { const m = routeMetrics(); return m ? m.stops : []; }
+function routeStopsList() { return myList(); }
 function actNames(r) { return pendOf(r, true).map(i => i.act).join(', '); }
 function buildGPX() {
-  const st = routeStopsList(), nm = `Região ${todayStr()}`;
+  const st = routeStopsList(), nm = `Lista ${todayStr()}`;
   let g = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Rotas de Campo" xmlns="http://www.topografix.com/GPX/1/1">\n<metadata><name>${nm}</name></metadata>\n`;
-  st.forEach(r => g += `<wpt lat="${r.lat}" lon="${r.lon}"><name>${xml(r.nome)}</name><desc>${xml(r.dono)} - ${xml(actNames(r))} - cod ${xml(r.id)}</desc></wpt>\n`);
+  st.forEach((r, i) => g += `<wpt lat="${r.lat}" lon="${r.lon}"><name>${pad(i + 1)} ${xml(r.nome)}</name><desc>${xml(r.dono)} - ${xml(actNames(r))} - cod ${xml(r.id)}</desc></wpt>\n`);
   return g + `</gpx>\n`;
 }
 function buildKML() {
   const st = routeStopsList();
-  let k = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Região ${todayStr()}</name>\n`;
-  st.forEach(r => k += `<Placemark><name>${xml(r.nome)}</name><description>${xml(r.dono)} - ${xml(actNames(r))} - cod ${xml(r.id)}</description><Point><coordinates>${r.lon},${r.lat},0</coordinates></Point></Placemark>\n`);
+  let k = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Lista ${todayStr()}</name>\n`;
+  st.forEach((r, i) => k += `<Placemark><name>${pad(i + 1)} ${xml(r.nome)}</name><description>${xml(r.dono)} - ${xml(actNames(r))} - cod ${xml(r.id)}</description><Point><coordinates>${r.lon},${r.lat},0</coordinates></Point></Placemark>\n`);
   return k + `</Document></kml>\n`;
 }
 function xlsxDownload(name, sheets) {
@@ -1436,10 +1326,10 @@ function xlsxDownload(name, sheets) {
   download(name, new Blob([out], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
 }
 function exportRouteXlsx() {
-  const m = routeMetrics(); if (!m) return;
-  const rows = [['Cód. estabelecimento', 'Estabelecimento', 'Proprietário', 'Situação', 'Atividades pendentes', 'Latitude', 'Longitude', 'Feita?', 'Observação']];
-  m.stops.forEach(r => rows.push([r.id, r.nome, r.dono, r.sit, actNames(r), r.lat, r.lon, statusOf(r) === 'pend' ? '' : 'Sim', (state.marks[r.id] || {}).obs || '']));
-  xlsxDownload(`regiao_do_dia_${todayStr()}.xlsx`, [['Região do dia', rows]]);
+  const list = myList(); if (!list.length) return;
+  const rows = [['Ordem', 'Cód. estabelecimento', 'Estabelecimento', 'Proprietário', 'Situação', 'Atividades pendentes', 'Latitude', 'Longitude', 'Feita?', 'Observação']];
+  list.forEach((r, i) => rows.push([i + 1, r.id, r.nome, r.dono, r.sit, actNames(r), r.lat, r.lon, statusOf(r) === 'pend' ? '' : 'Sim', (state.marks[r.id] || {}).obs || '']));
+  xlsxDownload(`minha_lista_${todayStr()}.xlsx`, [['Minha lista', rows]]);
 }
 function exportLog() {
   const rows = [['Atividade', 'Cód. estabelecimento', 'Estabelecimento', 'Proprietário', 'Data/hora da visita (app)', 'Observação', 'Latitude do aparelho', 'Longitude do aparelho', 'Precisão GPS (m)', 'Distância até o ponto cadastrado (m)', 'Situação na planilha mais recente']];
@@ -1486,10 +1376,9 @@ async function importFile(file, actName) {
         if (sheetT > m.ts) { m.acts = m.acts.filter(x => x !== actName); m.cleared = (m.cleared || []).concat(actName); reopened++; } else kept++;
       }
     }
-    rebuild(); saveData(); state.route = null; saveState();
+    rebuild(); saveData(); saveState();
     buildMarkers(); fitAll();
-    if (!had || !state.target) suggestQuiet(); else { planRoute(); }
-    renderAll(); if (state.route && state.route.ids.length) fitRoute();
+    renderAll();
     const pend = recs.filter(r => !r.oficial).length, semC = recs.filter(r => r.lat == null).length;
     let msg = `${actName}: ${recs.length} propriedades (${pend} pendentes, ${semC} sem coordenada)${selMuns ? ' · ' + selMuns.join(', ') : ''}.`;
     if (reopened) msg += ` ${reopened} visita(s) marcadas no app voltaram a pendente porque a planilha ainda as traz pendentes nessa atividade.`;
@@ -1498,31 +1387,47 @@ async function importFile(file, actName) {
     toast(msg, 11000);
   } catch (e) { console.error(e); toast('Não consegui ler a planilha: ' + e.message, 14000); }
 }
-function suggestQuiet() { try { suggestTargetInner(); } catch (e) { console.error(e); } }
-function suggestTargetInner() {
-  const R = Math.max(state.s.radius, 4), pend = records.filter(r => r.lat != null && statusOf(r) === 'pend');
-  if (!pend.length) return;
-  let best = null;
-  for (const p of pend) { const near = pend.filter(q => distKm(p, q) <= R); const score = Math.min(near.length, state.s.max), dBase = distKm(p, state.base); if (!best || score > best.score || (score === best.score && dBase < best.dBase)) best = {near, score, dBase}; }
-  state.target = {lat: best.near.reduce((a, q) => a + q.lat, 0) / best.near.length, lon: best.near.reduce((a, q) => a + q.lon, 0) / best.near.length};
-  planRoute();
+/* ============ GPS (minha posição ao vivo, funciona sem internet se o aparelho tiver chip de GPS) ============ */
+let lastFix = null, watchId = null, follow = true, wake = null, firstFix = false, errShown = 0;
+function setGpsBtn(txt) { $('#btnLocate').innerHTML = '<span>GPS</span>' + (txt ? '<small>' + txt + '</small>' : ''); }
+function drawMe(c) {
+  lastFix = {lat: c.latitude, lon: c.longitude, acc: c.accuracy};
+  grpMe.clearLayers();
+  L.circle([c.latitude, c.longitude], {radius: c.accuracy, color: '#00897b', weight: 1, fillOpacity: .12, interactive: false}).addTo(grpMe);
+  const moving = c.heading != null && !isNaN(c.heading) && c.speed != null && c.speed > 1;
+  const html = `<div class="me" ${moving ? `style="transform:rotate(${c.heading}deg)"` : ''}>${moving ? '<i class="arr"></i>' : ''}<b class="dot"></b></div>`;
+  L.marker([c.latitude, c.longitude], {icon: L.divIcon({className: 'meicon', html, iconSize: [44, 44], iconAnchor: [22, 22]}), interactive: false, zIndexOffset: 1000}).addTo(grpMe);
 }
-
-/* ============ GPS ============ */
-let lastFix = null;
-function locate(thenSetBase) {
-  if (!navigator.geolocation) { toast('Este aparelho não oferece GPS ao navegador.'); return; }
-  toast('Buscando sua posição…', 8000);
-  navigator.geolocation.getCurrentPosition(p => {
-    lastFix = {lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy};
-    grpMe.clearLayers();
-    L.circle([lastFix.lat, lastFix.lon], {radius: lastFix.acc, color: '#00897b', weight: 1, fillOpacity: .12, interactive: false}).addTo(grpMe);
-    L.circleMarker([lastFix.lat, lastFix.lon], {radius: 8, color: '#fff', weight: 3, fillColor: '#00897b', fillOpacity: 1, interactive: false}).addTo(grpMe);
-    if (thenSetBase) { state.base = {lat: lastFix.lat, lon: lastFix.lon}; state.baseLabel = 'Minha posição (GPS)'; state.baseAuto = false; replan(); }
-    else map.setView([lastFix.lat, lastFix.lon], Math.max(map.getZoom(), 13));
-    toast(`Posição obtida (±${Math.round(lastFix.acc)} m)`);
-  }, err => toast('Não consegui o GPS: ' + (err.code === 1 ? 'permissão negada. Libere a localização no navegador.' : err.message), 6000), {enableHighAccuracy: true, timeout: 20000, maximumAge: 30000});
+function onFix(p) {
+  drawMe(p.coords); errShown = 0;
+  setGpsBtn('±' + Math.round(p.coords.accuracy) + ' m');
+  if (!firstFix) { firstFix = true; map.setView([p.coords.latitude, p.coords.longitude], Math.max(map.getZoom(), 15)); toast('Localização encontrada (±' + Math.round(p.coords.accuracy) + ' m)'); }
+  else if (follow) map.panTo([p.coords.latitude, p.coords.longitude], {animate: true, duration: 0.5});
 }
+function onGpsErr(err) {
+  if (err.code === 1) { stopTrack(); toast('Permissão de localização negada. Libere a localização para este app nas configurações do navegador e do tablet.', 9000); return; }
+  setGpsBtn('sem sinal');
+  if (Date.now() - errShown > 20000) {
+    errShown = Date.now();
+    toast(err.code === 2 ? 'Sem posição disponível. Ative a Localização do tablet em “alta precisão” e vá a céu aberto. Tablets só com Wi-Fi podem não ter chip de GPS.' : 'Ainda procurando o sinal de GPS. Sem internet, o primeiro sinal pode levar alguns minutos a céu aberto.', 9000);
+  }
+}
+async function keepAwake() { try { if (navigator.wakeLock) wake = await navigator.wakeLock.request('screen'); } catch (_) {} }
+function startTrack() {
+  if (!navigator.geolocation) { toast('Este navegador não oferece localização.'); return; }
+  if (!window.isSecureContext) toast('A localização só funciona em endereço https ou com o app instalado.', 8000);
+  firstFix = false; follow = true; errShown = 0;
+  watchId = navigator.geolocation.watchPosition(onFix, onGpsErr, {enableHighAccuracy: true, maximumAge: 2000, timeout: 30000});
+  $('#btnLocate').classList.add('on'); setGpsBtn('buscando'); keepAwake();
+}
+function stopTrack() {
+  if (watchId != null) navigator.geolocation.clearWatch(watchId);
+  watchId = null; grpMe.clearLayers(); lastFix = null; firstFix = false;
+  $('#btnLocate').classList.remove('on'); $('#btnCenter').style.display = 'none'; setGpsBtn('');
+  try { if (wake) wake.release(); } catch (_) {} wake = null;
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && watchId != null) keepAwake(); });
+map.on('dragstart', () => { if (watchId != null && follow) { follow = false; $('#btnCenter').style.display = ''; } });
 
 /* ============ mapa offline (cache de blocos) ============ */
 const tileXY = (lat, lon, z) => { const n = 2 ** z, x = Math.floor((lon + 180) / 360 * n), l = rad(lat), y = Math.floor((1 - Math.log(Math.tan(l) + 1 / Math.cos(l)) / Math.PI) / 2 * n); return [Math.max(0, Math.min(n - 1, x)), Math.max(0, Math.min(n - 1, y))]; };
@@ -1562,21 +1467,7 @@ async function downloadTiles() {
 }
 
 /* ============ ações ============ */
-function replan() { planRoute(); renderAll(); }
-function setPick(mode) {
-  pick = pick === mode ? null : mode;
-  $('#btnBasePick').classList.toggle('active', pick === 'base'); $('#btnTgtPick').classList.toggle('active', pick === 'target');
-  const b = $('#banner'); b.style.display = pick ? 'block' : 'none';
-  b.textContent = pick === 'base' ? 'Toque no mapa para definir o ponto de partida' : 'Toque no mapa para definir a região de destino';
-  map.getContainer().style.cursor = pick ? 'crosshair' : '';
-}
-map.on('click', e => {
-  if (!pick) return;
-  if (pick === 'base') { state.base = {lat: e.latlng.lat, lon: e.latlng.lng}; state.baseLabel = 'Ponto escolhido no mapa'; state.baseAuto = false; }
-  else state.target = {lat: e.latlng.lat, lon: e.latlng.lng};
-  setPick(pick); replan();
-});
-function renderAll() { renderRouteControls(); renderLegend(); renderRouteOverlay(); renderRouteStops(); renderList(); renderDados(); }
+function renderAll() { renderLegend(); renderListOverlay(); renderMyList(); renderList(); renderDados(); }
 function focusRecord(id) { const r = byId.get(id); if (!r || r.lat == null) { toast('Esta propriedade não tem coordenada.'); return; } map.setView([r.lat, r.lon], Math.max(map.getZoom(), 14)); openPopup(r); }
 
 document.addEventListener('click', e => {
@@ -1586,7 +1477,16 @@ document.addEventListener('click', e => {
     if (act === 'mark') { const pp = a.closest('.pp'); markVisited(id, pp ? $('.obs', pp).value : ''); return; }
     if (act === 'unmark') { unmarkVisited(id); return; }
     if (act === 'nav') { openNav(byId.get(id)); return; }
-    if (act === 'target') { const r = byId.get(id); state.target = {lat: r.lat, lon: r.lon}; map.closePopup(); replan(); toast('Destino definido: ' + r.nome); return; }
+    if (act === 'addlist') { toggleList(id); return; }
+    if (act === 'unlist') { toggleList(id); return; }
+    if (act === 'up') { moveList(id, -1); return; }
+    if (act === 'down') { moveList(id, 1); return; }
+  }
+  const ch = e.target.closest('[data-actchip]');
+  if (ch) {
+    const n = ch.dataset.actchip, i = state.actSel.indexOf(n);
+    if (i >= 0) state.actSel.splice(i, 1); else state.actSel.push(n);
+    saveState(); refreshAllStyles(); applyFilters(); renderLegend(); renderMyList(); renderListOverlay(); renderList(); renderDados(); return;
   }
   const lg = e.target.closest('[data-leg]');
   if (lg) { const k = lg.dataset.leg; state.f[k] = !state.f[k]; applyFilters(); renderLegend(); saveState(); return; }
@@ -1637,36 +1537,24 @@ document.addEventListener('click', e => {
   if (dl) {
     const n = dl.dataset.delact;
     if (confirm(`Remover a atividade “${n}” e os dados da planilha dela deste aparelho? As visitas já marcadas no app continuam no registro.`)) {
-      acts = acts.filter(a => a.name !== n); if (state.actFilter === n) state.actFilter = 'all';
-      rebuild(); saveData(); state.route = null; buildMarkers(); if (records.length) planRoute(); renderAll();
+      acts = acts.filter(a => a.name !== n); state.actSel = state.actSel.filter(x => x !== n);
+      rebuild(); saveData(); saveState(); buildMarkers(); renderAll();
     }
   }
 });
-document.addEventListener('change', e => {
-  if (e.target.id !== 'actSel') return;
-  state.actFilter = e.target.value; saveState(); refreshAllStyles(); applyFilters();
-  if (records.length) planRoute(); renderAll(); fitAll();
-});
-$('#btnBaseGps').onclick = () => locate(true);
-$('#btnBasePick').onclick = () => setPick('base');
-$('#btnBaseDef').onclick = () => { state.baseAuto = true; autoBase(); replan(); };
-$('#btnTgtPick').onclick = () => setPick('target');
-$('#btnTgtSuggest').onclick = suggestTarget;
-$('#btnTgtClear').onclick = () => { state.target = null; replan(); };
-$('#btnRecalc').onclick = () => { replan(); fitRoute(); };
 let rt; const later = fn => { clearTimeout(rt); rt = setTimeout(fn, 150); };
-[['sRadius', 'radius'], ['sCorr', 'corridor'], ['sMax', 'max']].forEach(([id, k]) => $('#' + id).oninput = e => { state.s[k] = +e.target.value; renderRouteControls(); later(replan); });
-$('#cRound').onchange = e => { state.s.round = e.target.checked; replan(); };
+$('#btnClearList').onclick = () => { if (state.list.length && confirm('Limpar a lista do dia?')) { state.list = []; saveState(); renderMyList(); renderListOverlay(); } };
 $('#q').oninput = () => later(renderList); $('#fSt').onchange = $('#fSort').onchange = renderList;
-$('#btnGpx').onclick = () => download(`rota_${todayStr()}.gpx`, buildGPX(), 'application/gpx+xml');
-$('#btnKml').onclick = () => download(`rota_${todayStr()}.kml`, buildKML(), 'application/vnd.google-earth.kml+xml');
+$('#btnGpx').onclick = () => download(`lista_${todayStr()}.gpx`, buildGPX(), 'application/gpx+xml');
+$('#btnKml').onclick = () => download(`lista_${todayStr()}.kml`, buildKML(), 'application/vnd.google-earth.kml+xml');
 $('#btnRouteXlsx').onclick = exportRouteXlsx;
 $('#btnLogXlsx').onclick = exportLog; $('#btnAllXlsx').onclick = exportAll;
-$('#btnShare').onclick = async () => { try { const f = new File([buildGPX()], `rota_${todayStr()}.gpx`, {type: 'application/gpx+xml'}); await navigator.share({files: [f], title: 'Rota do dia'}); } catch (e) { if (e.name !== 'AbortError') toast('Não foi possível compartilhar; use “Exportar GPX”.'); } };
+$('#btnShare').onclick = async () => { try { const f = new File([buildGPX()], `lista_${todayStr()}.gpx`, {type: 'application/gpx+xml'}); await navigator.share({files: [f], title: 'Minha lista do dia'}); } catch (e) { if (e.name !== 'AbortError') toast('Não foi possível compartilhar; use “Exportar GPX”.'); } };
 try { if (navigator.canShare && navigator.canShare({files: [new File(['x'], 'a.gpx', {type: 'application/gpx+xml'})]})) $('#btnShare').style.display = ''; } catch (_) {}
 $('#btnLayer').onclick = () => setLayer(state.layer === 'osm' ? 'sat' : 'osm');
 $('#btnFit').onclick = fitAll;
-$('#btnLocate').onclick = () => locate(false);
+$('#btnLocate').onclick = () => { if (watchId == null) startTrack(); else stopTrack(); };
+$('#btnCenter').onclick = () => { follow = true; $('#btnCenter').style.display = 'none'; if (lastFix) map.setView([lastFix.lat, lastFix.lon], Math.max(map.getZoom(), 15)); };
 $('#sDepth').oninput = () => { $('#oDepth').textContent = '+' + $('#sDepth').value; const p = planTiles(); $('#dlInfo').textContent = `Esta área: ${p.list.length} blocos (zoom ${p.z0}–${p.z1}).`; };
 $('#btnDl').onclick = downloadTiles;
 $('#btnDlClear').onclick = async () => { if (confirm('Apagar todos os mapas guardados?')) { await caches.delete('tiles-v1'); toast('Mapas guardados apagados.'); renderStorage(); } };
@@ -1681,7 +1569,7 @@ new ResizeObserver(() => map.invalidateSize()).observe($('#map'));
 loadAll();
 setLayer(state.layer);
 buildMarkers();
-if (records.length) { if (!state.route) planRoute(); fitAll(); if (state.target || state.route) fitRoute(); }
+if (records.length) fitAll();
 showTab(state.tab || 'rota');
 renderAll(); renderStorage();
 try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (_) {}
